@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Register</title>
 </head>
-    <style>
+ <style>
         body {
             margin: 0;
             padding: 0;
@@ -62,8 +62,8 @@
     </style>
 <body>
     <div class="login-container">
-        <img src="{% static 'images/download.png' %}" alt="Italian Trulli">
-        <h2>Login</h2>
+        <img src="{% static 'images/download.png' %}" alt="Logo">
+        <h2>Register</h2>
 
         {% if messages %}
             {% for message in messages %}
@@ -71,15 +71,14 @@
             {% endfor %}
         {% endif %}
 
-        <form method="POST" action="{% url 'login' %}">
+        <form method="POST">
             {% csrf_token %}
             <input type="email" name="email" placeholder="Email" required />
             <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
         </form>
 
-   <p>New user? <a href="{% url 'register' %}">Create account</a></p>
-
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
     </div>
 </body>
 </html>
