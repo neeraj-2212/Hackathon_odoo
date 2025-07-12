@@ -1,84 +1,264 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register</title>
-</head>
- <style>
-        body {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Swapp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --danger: #f72585;
+            --success: #4cc9f0;
+        }
+        
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
         }
-
-        img {
-            width: 20%;
-            padding-left: 40%;
+        
+        .register-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
-
-        .login-container {
-            background: #ffffff;
-            padding: 40px 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            width: 300px;
+        
+        .register-card:hover {
+            transform: translateY(-5px);
         }
-
-        .login-container h2 {
+        
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--success), var(--primary-light));
+        }
+        
+        .logo {
+            display: block;
+            width: 120px;
+            margin: 0 auto 30px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        .register-title {
             text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--dark);
             margin-bottom: 30px;
-            color: #333333;
+            background: linear-gradient(90deg, var(--success), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        .login-container input[type="email"],
-        .login-container input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
         }
-
-        .login-container button {
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+        
+        .form-control {
             width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
+            padding: 15px 20px;
+            border: none;
+            background: rgba(245, 245, 245, 0.8);
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--dark);
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            background: rgba(245, 245, 245, 0.95);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--success), var(--primary-light));
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
+            margin-top: 10px;
         }
-
-        .login-container button:hover {
-            background-color: #45a049;
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .footer-text a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            background: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .password-hint {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .register-card {
+                padding: 30px 20px;
+            }
+            
+            .register-title {
+                font-size: 24px;
+            }
         }
     </style>
+</head>
 <body>
-    <div class="login-container">
-        <img src="{% static 'images/download.png' %}" alt="Logo">
-        <h2>Register</h2>
-
+    <div class="register-card">
+        <img src="{% static 'images/download.png' %}" alt="Swapp Logo" class="logo">
+        <h1 class="register-title">Create Account</h1>
+        
         {% if messages %}
             {% for message in messages %}
-                <p style="color:red;">{{ message }}</p>
+                <div class="alert">{{ message }}</div>
             {% endfor %}
         {% endif %}
-
+        
         <form method="POST">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Register</button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="John" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Doe" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="+1 234 567 8900" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" class="form-control" placeholder="123 Main St, City" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Create password" required>
+                <p class="password-hint">Use 8+ characters with a mix of letters, numbers & symbols</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
+            </div>
+            
+            <button type="submit" class="btn">Create Account</button>
         </form>
-
-        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        
+        <p class="footer-text">
+            Already have an account? <a href="{% url 'login' %}">Sign in</a>
+        </p>
     </div>
 </body>
 </html>

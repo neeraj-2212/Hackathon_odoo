@@ -5,6 +5,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Item,ItemImage
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
+
+from .models import UserProfile, Item
+from .forms import ProfileUpdateForm
 
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -71,3 +76,45 @@ def register_view(request):
             return redirect('login')
 
     return render(request, 'register.html')
+
+def list_item_view(request):
+    item_list = Item.objects.prefetch_related('images').all()
+    paginator = Paginator(item_list, 12)  # Show 12 items per page
+    page_number = request.GET.get('page')
+    items = paginator.get_page(page_number)
+    return render(request, "list_item.html", {'items': items})
+
+from django.shortcuts import render, get_object_or_404
+
+def item_detail_view(request, item_id):
+    item = get_object_or_404(Item.objects.prefetch_related('images'), id=item_id)
+    context = {
+        'item': item,
+        'owner': item.user  # Assuming you want to show owner info
+    }
+    return render(request, "Items_detail_page.html", context)
+
+@login_required
+def user_profile(request):
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
+    
+    user_items = Item.objects.filter(user=request.user).order_by('-uploaded_at')
+    
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')
+    else:
+        form = ProfileUpdateForm(instance=profile)
+    
+    context = {
+        'profile': profile,
+        'form': form,
+        'user_items': user_items[:8],  # Show latest 8 items
+        'total_items': user_items.count()
+    }
+    return render(request, 'user_profile.html', context)

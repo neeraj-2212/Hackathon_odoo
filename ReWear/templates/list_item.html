@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Items</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .item-row {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .item-row:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-row img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-right: 1px solid #eee;
+        }
+
+        .item-info {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .item-info h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .item-info p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .item-info button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .item-info button:hover {
+            background-color: #2980b9;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .item-row {
+                flex-direction: column;
+            }
+            
+            .item-row img {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="page-title">All Items</h1>
+
+    {% for item in items %}
+    <div class="item-row">
+        <!-- Display the first image -->
+        {% if item.images.all %}
+            <img src="{{ item.images.first.image.url }}" alt="{{ item.title }}">
+        {% else %}
+            <img src="https://via.placeholder.com/200" alt="No image available">
+        {% endif %}
+        
+        <div class="item-info">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description|truncatechars:150 }}</p>
+            <div style="margin-bottom: 15px;">
+                <span style="background: #e0f7fa; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem;">
+                    {{ item.get_category_display }}
+                </span>
+                <span style="background: #e8f5e9; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; margin-left: 5px;">
+                    {{ item.get_condition_display }}
+                </span>
+            </div>
+            <a href="{% url 'item_detail' item.id %}">
+                <button>Details</button>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-items">
+        <p>No items found.</p>
+    </div>
+    {% endfor %}
+</body>
+</html>

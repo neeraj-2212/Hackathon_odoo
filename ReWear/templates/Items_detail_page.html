@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ item.title }} - Details</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #6c757d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .item-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .gallery-section {
+            padding: 20px;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--primary);
+        }
+        
+        .details-section {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .available {
+            background-color: #e6f7ee;
+            color: #28a745;
+        }
+        
+        .unavailable {
+            background-color: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .item-title {
+            font-size: 28px;
+            margin: 0 0 10px;
+            color: var(--dark);
+        }
+        
+        .item-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .meta-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .meta-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .description {
+            margin-bottom: 30px;
+        }
+        
+        .description h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .description-content {
+            color: #495057;
+            white-space: pre-line;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .owner-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .owner-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .owner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .owner-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .owner-meta {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .owner-bio {
+            color: #495057;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .item-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .main-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="{% url 'item-list' %}" class="back-button">
+                ← Back to Items
+            </a>
+        </div>
+        
+        <div class="item-container">
+            <div class="gallery-section">
+                <!-- Main Image -->
+                {% if item.images.all %}
+                    <img src="{{ item.images.first.image.url }}" alt="{{ item.title }}" class="main-image" id="mainImage">
+                {% else %}
+                    <div class="main-image" style="display: flex; align-items: center; justify-content: center; color: #adb5bd;">
+                        No Image Available
+                    </div>
+                {% endif %}
+                
+                <!-- Thumbnails -->
+                <div class="thumbnail-container">
+                    {% for image in item.images.all %}
+                        <img src="{{ image.image.url }}" alt="Thumbnail {{ forloop.counter }}" class="thumbnail {% if forloop.first %}active{% endif %}" onclick="changeMainImage('{{ image.image.url }}', this)">
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="details-section">
+                <span class="status-badge {% if item.status %}available{% else %}unavailable{% endif %}">
+                    {% if item.status %}Available{% else %}Unavailable{% endif %}
+                </span>
+                
+                <h1 class="item-title">{{ item.title }}</h1>
+                
+                {% if item.points %}
+                <div class="item-price">{{ item.points }} Points</div>
+                {% endif %}
+                
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <div class="meta-label">Category</div>
+                        <div class="meta-value">{{ item.get_category_display }}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Condition</div>
+                        <div class="meta-value">{{ item.get_condition_display }}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Size</div>
+                        <div class="meta-value">{{ item.size }}</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Listed On</div>
+                        <div class="meta-value">{{ item.uploaded_at|date:"M d, Y" }}</div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h3>Description</h3>
+                    <div class="description-content">{{ item.description }}</div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" {% if not item.status %}disabled{% endif %}>
+                        {% if item.points %}Redeem Points{% else %}Request Swap{% endif %}
+                    </button>
+                    <button class="btn btn-secondary">
+                        Contact Owner
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="owner-section">
+            <div class="owner-header">
+                <div class="owner-avatar">{{ item.user.username|first|upper }}</div>
+                <div>
+                    <h3 class="owner-name">{{ item.user.username }}</h3>
+                    <div class="owner-meta">Member since {{ item.user.date_joined|date:"M Y" }}</div>
+                </div>
+            </div>
+            <div class="owner-bio">
+                This user hasn't added a bio yet.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeMainImage(src, element) {
+            // Update main image
+            document.getElementById('mainImage').src = src;
+            
+            // Update active thumbnail
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+        
+        // You can add more interactive features here
+    </script>
+</body>
+</html>

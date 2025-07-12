@@ -229,11 +229,37 @@
                 font-size: 2rem;
             }
         }
+              .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+            .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+             .back-button:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        
+            <div class="header">
+            <a href="{% url 'item-list' %}" class="back-button">
+                ← Back to Items
+            </a>
+        </div>
         <h1>Add New Item</h1>
         <p class="subtitle">List your item with detailed information and images</p>
 
