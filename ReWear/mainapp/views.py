@@ -18,20 +18,21 @@ def add_item_view(request):
         size = request.POST.get('size')
         condition = request.POST.get('condition')
 
-        item = Item.objects.create(
-            title=title,
-            description=description,
-            category=category,
-            size=size,
-            condition=condition,
+        item = Item(
+            title=request.POST.get('title'),
+            description=request.POST.get('description'),
+            category=request.POST.get('category'),
+            size=request.POST.get('size'),
+            condition=request.POST.get('condition'),
             user=request.user,
-            status=False
+            status=True,  # Assuming you want it available by default
+            points=0,    # Set default points or calculate as needed
         )
-
-        for i in range(5):  # Up to 5 images
-            img = request.FILES.get(f'image{i}')
-            if img:
-                ItemImage.objects.create(item=item, image=img)
+        item.save()
+        # Handle multiple image uploads
+        images = request.FILES.getlist('image')
+        for i, img in enumerate(images[:5]):  # Limit to 5 images
+            ItemImage.objects.create(user=request.user,item=item, image=img)
 
         messages.success(request, "Item uploaded successfully. Awaiting admin approval.")
         return redirect('landing')

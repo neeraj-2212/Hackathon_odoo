@@ -329,98 +329,132 @@
         </form>
     </div>
 
-    <script>
-        // Image upload functionality
-        const imageUpload = document.getElementById('imageUpload');
-        const imageInput = document.getElementById('imageInput');
-        const imagePreview = document.getElementById('imagePreview');
-        let selectedImages = [];
+ <script>
+    // Image upload functionality
+    const imageUpload = document.getElementById('imageUpload');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    let selectedImages = [];
 
-        imageUpload.addEventListener('click', () => imageInput.click());
+    imageUpload.addEventListener('click', () => imageInput.click());
 
-        imageUpload.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            imageUpload.classList.add('dragover');
-        });
+    imageUpload.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        imageUpload.classList.add('dragover');
+    });
 
-        imageUpload.addEventListener('dragleave', () => {
-            imageUpload.classList.remove('dragover');
-        });
+    imageUpload.addEventListener('dragleave', () => {
+        imageUpload.classList.remove('dragover');
+    });
 
-        imageUpload.addEventListener('drop', (e) => {
-            e.preventDefault();
-            imageUpload.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files);
-            handleImageFiles(files);
-        });
+    imageUpload.addEventListener('drop', (e) => {
+        e.preventDefault();
+        imageUpload.classList.remove('dragover');
+        const files = Array.from(e.dataTransfer.files);
+        handleImageFiles(files);
+    });
 
-        imageInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            handleImageFiles(files);
-        });
+    imageInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        handleImageFiles(files);
+    });
 
-        function handleImageFiles(files) {
-            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    function handleImageFiles(files) {
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
 
-            if (selectedImages.length + imageFiles.length > 5) {
-                alert('You can only upload up to 5 images');
-                return;
-            }
+        if (selectedImages.length + imageFiles.length > 5) {
+            alert('You can only upload up to 5 images');
+            return;
+        }
 
-            imageFiles.forEach(file => {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert(`${file.name} is too large. Maximum size is 10MB.`);
-                    return;
-                }
+        // Clear the file input to allow selecting the same files again if needed
+        imageInput.value = '';
 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const imageData = {
-                        file: file,
-                        url: e.target.result
-                    };
-                    selectedImages.push(imageData);
-                    displayImagePreview();
+        imageFiles.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageData = {
+                    file: file,
+                    url: e.target.result
                 };
-                reader.readAsDataURL(file);
-            });
-        }
+                selectedImages.push(imageData);
+                displayImagePreview();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
-        function displayImagePreview() {
-            imagePreview.innerHTML = '';
-            selectedImages.forEach((image, index) => {
-                const previewItem = document.createElement('div');
-                previewItem.className = 'preview-item';
-                previewItem.innerHTML = `
-                    <img src="${image.url}" alt="Preview">
-                    <button type="button" class="remove-image" onclick="removeImage(${index})">×</button>
-                `;
-                imagePreview.appendChild(previewItem);
-            });
-        }
+    function displayImagePreview() {
+        imagePreview.innerHTML = '';
+        selectedImages.forEach((image, index) => {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.innerHTML = `
+                <img src="${image.url}" alt="Preview">
+                <button type="button" class="remove-image" onclick="removeImage(${index})">×</button>
+            `;
+            imagePreview.appendChild(previewItem);
+        });
+    }
 
-        function removeImage(index) {
-            selectedImages.splice(index, 1);
-            displayImagePreview();
-        }
+    function removeImage(index) {
+        selectedImages.splice(index, 1);
+        displayImagePreview();
+    }
 
-        // Form submission
-   function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    // Form submission handling
+    document.getElementById('itemForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        // Clear any existing image inputs (in case there were previous submissions)
+        for (let i = 0; i < selectedImages.length; i++) {
+            formData.append('image', selectedImages[i].file);
+        }
+        
+        // Get CSRF token
+        const csrftoken = getCookie('csrftoken');
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('successMessage').style.display = 'block';
+                // Optionally reset the form
+                this.reset();
+                selectedImages = [];
+                displayImagePreview();
+            } else {
+                alert('Error submitting form');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error submitting form');
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-    return cookieValue;
-}
-    </script>
+</script>
 </body>
 
 </html>

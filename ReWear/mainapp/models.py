@@ -35,17 +35,23 @@ class Item(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     size = models.CharField(max_length=50)
-    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES)  # For simplicity use 1 image now
+    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES) 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)  # False = Unavailable, True = Available
+    status = models.BooleanField(default=False)# False = Unavailable, True = Available
+    points = models.IntegerField(null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
     
 class ItemImage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='item_images/')
+
+    def __str__(self):
+        return f"{self.user} has {self.item.title}"
+
 # Create your models here.
 # from django.contrib.auth.models import User
 # from django.db import models
