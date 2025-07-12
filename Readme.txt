@@ -21,7 +21,6 @@ A web-based platform to promote **sustainable fashion** by enabling users to **e
 - 🎯 Point-based Redemption: Earn and spend points to claim clothes  
 - 🔍 Browse, filter, and search listings  
 - 🛠️ Admin panel for item moderation  
-- 💬 Messaging or swap request system (optional add-on)
 
 ---
 
@@ -32,9 +31,7 @@ A web-based platform to promote **sustainable fashion** by enabling users to **e
 | Backend        | Python, Django     |
 | Frontend       | HTML, CSS, JavaScript (optional: Bootstrap or Tailwind) |
 | Database       | SQLite (default), can be upgraded to PostgreSQL |
-| Authentication | Django's built-in auth system |
 | Image Handling | Django Media Files |
-| Deployment     | (To be added: Render, Heroku, or any cloud service) |
 
 ---
 
@@ -43,5 +40,5 @@ A web-based platform to promote **sustainable fashion** by enabling users to **e
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/ReWear.git
+git clone https://github.com/neeraj-2212/Hackathon_odoo.git
 cd ReWear
