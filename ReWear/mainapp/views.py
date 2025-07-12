@@ -13,7 +13,12 @@ from .models import UserProfile, Item
 from .forms import ProfileUpdateForm
 
 def landing_page(request):
-    return render(request, 'landing_page.html')
+    featured_items = Item.objects.filter(status=True).order_by('-uploaded_at')[:2]
+    
+    context = {
+        'featured_items': featured_items,
+    }
+    return render(request, 'landing_page.html', context)
 
 @login_required
 def add_item_view(request):
@@ -40,7 +45,7 @@ def add_item_view(request):
         for i, img in enumerate(images[:5]):  # Limit to 5 images
             ItemImage.objects.create(user=request.user,item=item, image=img)
 
-        messages.success(request, "Item uploaded successfully. Awaiting admin approval.")
+    
         return redirect('landing')
 
     return render(request, 'add_items.html')

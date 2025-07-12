@@ -527,6 +527,79 @@
         border: none;
         transition: all 0.3s ease;
     }
+    .carousel {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.item-card {
+    min-width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.item-image {
+    height: 200px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.no-image {
+    color: #999;
+}
+
+.item-info {
+    padding: 15px;
+}
+
+.item-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.carousel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+}
+
+.carousel-dot.active {
+    background: #333;
+}
+
+.no-items {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
 
     .cta-buttons .btn:hover {
         background: #222;
@@ -774,39 +847,48 @@
     </section>
 
     <!-- Featured Items -->
-    <section class="items-section" id="items">
-        <h2 class="section-title">Featured Items</h2>
-        
-        <div class="carousel">
-            <div class="carousel-container">
-                {% for item in featured_items %}
-                <div class="item-card">
-                    <div class="item-image">
-                        {% if item.images.all %}
-                            <img src="{{ item.images.first.image.url }}" alt="{{ item.title }}">
-                        {% else %}
-                            <span>No Image</span>
-                        {% endif %}
+<section class="items-section" id="items">
+    <h2 class="section-title">Featured Items</h2>
+    
+    <div class="carousel">
+        {% if featured_items %}
+        <div class="carousel-container">
+            {% for item in featured_items %}
+            <div class="item-card">
+                <div class="item-image">
+                    {% if item.images.all %}
+                        <img src="{{ item.images.first.image.url }}" alt="{{ item.title }}">
+                    {% else %}
+                        <span class="no-image">No Image Available</span>
+                    {% endif %}
+                </div>
+                <div class="item-info">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description|truncatechars:80 }}</p>
+                    <div class="item-meta">
+                        <span class="category">{{ item.get_category_display }}</span>
+                        <span class="points">{{ item.points }} pts</span>
                     </div>
-                    <div class="item-info">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.description|truncatechars:80 }}</p>
-                        <div class="item-meta">
-                            <span>{{ item.get_category_display }}</span>
-                            <span>{{ item.points }} pts</span>
-                        </div>
+                    <div class="item-condition">
+                        Condition: {{ item.get_condition_display }}
                     </div>
                 </div>
-                {% endfor %}
             </div>
-            
-            <div class="carousel-nav">
-                <div class="carousel-dot active"></div>
-                <div class="carousel-dot"></div>
-                <div class="carousel-dot"></div>
-            </div>
+            {% endfor %}
         </div>
-    </section>
+        
+        <div class="carousel-nav">
+            {% for i in featured_items %}
+            <div class="carousel-dot {% if forloop.first %}active{% endif %}"></div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-items">
+            <p>No featured items available at the moment.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
 
     <!-- How It Works -->
     <section class="how-it-works">
@@ -854,6 +936,38 @@
     </footer>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.carousel-container');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const itemWidth = 250; // Should match your CSS
+    const gap = 20; // Should match your CSS gap
+    let currentIndex = 0;
+    
+    if (!container || !dots.length) return;
+    
+    function updateCarousel() {
+        const offset = -(currentIndex * (itemWidth + gap));
+        container.style.transform = `translateX(${offset}px)`;
+        
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+    }
+    
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentIndex = index;
+            updateCarousel();
+        });
+    });
+    
+    // Optional: Auto-rotate carousel
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % dots.length;
+        updateCarousel();
+    }, 5000);
+});
         // Animated text
         function revealLines() {
             const lines = document.querySelectorAll('.line');
