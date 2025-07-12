@@ -241,7 +241,8 @@
             ✅ Item successfully listed! Your item is now available for others to view.
         </div>
 
-        <form id="itemForm">
+        <form id="itemForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}    
             <div class="form-section">
                 <h2 class="section-title">📸 Images</h2>
                 <div class="form-group">
@@ -251,7 +252,8 @@
                         <div class="upload-text">Click to upload or drag and drop</div>
                         <div class="upload-subtext">PNG, JPG, GIF up to 10MB each</div>
                     </div>
-                    <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                    <input type="file" name="image" id="imageInput" multiple accept="image/*" style="display: none;">
+
                     <div class="image-preview" id="imagePreview"></div>
                 </div>
             </div>
