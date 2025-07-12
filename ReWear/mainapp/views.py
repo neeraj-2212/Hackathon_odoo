@@ -25,4 +25,4 @@ def login_view(request):  # ✅ Rename view function to avoid conflict
     return render(request, 'login.html')
 
 def landing_page(request):
-    return render(request,"login.html")
+    return render(request,"landing_page.html")

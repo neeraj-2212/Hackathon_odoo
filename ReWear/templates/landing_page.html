@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,9 +6,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clothing Swap</title>
-    <link rel="stylesheet" href="\ReWear\static\css\landing_page.css">
+    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
 </head>
-
+    <script src="{% static 'js/land_page.png' %}"></script>
 <body>
 
     <section class="hero">
@@ -25,32 +26,32 @@
 
     <section id="categories" class="categories-grid">
         <div class="category">
-            <img src="\ReWear\static\images\download.jpeg" alt="Tops">
+            <img src="{% static 'images/download.png' %}" alt="Tops">
             <h3>Tops</h3>
         </div>
         <div class="category">
-            <img src="\ReWear\static\images\download.jpeg" alt="Jeans">
+            <img src="{% static 'images/download.png' %}" alt="Jeans">
             <h3>Jeans</h3>
         </div>
         <div class="category">
-            <img src="\ReWear\static\images\download.jpeg" alt="Jackets">
+            <img src="{% static 'images/download.png' %}" alt="Jackets">
             <h3>Jackets</h3>
         </div>
         <div class="category">
-            <img src="\ReWear\static\images\download.jpeg" alt="Shoes">
+            <img src="{% static 'images/download.png' %}" alt="Shoes">
             <h3>Shoes</h3>
         </div>
         <div class="category">
-            <img src="\ReWear\static\images\download.jpeg" alt="Accessories">
+            <img src="{% static 'images/download.png' %}" alt="Accessories">
             <h3>Accessories</h3>
         </div>
         <div class="category">
-            <img src="\ReWear\static\images\download.jpeg" alt="Others">
+            <img src="{% static 'images/download.png' %}" alt="Others">
             <h3>Others</h3>
         </div>
     </section>
 
-    <script src="/ReWear/static/js/landing_page.js"></script>
+
 
 </body>
 

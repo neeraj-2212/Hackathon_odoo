@@ -9,7 +9,7 @@ function revealLines() {
     }
   });
 }
-
++
 window.addEventListener('scroll', revealLines);
 window.addEventListener('load', revealLines);
 
