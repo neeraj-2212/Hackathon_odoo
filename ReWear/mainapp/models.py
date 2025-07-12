@@ -19,16 +19,10 @@ class Item(models.Model):
     ]
 
     CATEGORY_CHOICES = [
-        ('electronics', 'Electronics'),
-        ('clothing', 'Clothing & Fashion'),
-        ('home', 'Home & Garden'),
-        ('sports', 'Sports & Recreation'),
-        ('books', 'Books & Media'),
-        ('toys', 'Toys & Games'),
-        ('automotive', 'Automotive'),
-        ('tools', 'Tools & Equipment'),
-        ('jewelry', 'Jewelry & Accessories'),
-        ('other', 'Other'),
+        ('shirt','shirt'),
+        ('t-shirt','t-shirt'),
+        ('Track','Track'),
+        ('Dress','Dress'),
     ]
 
     title = models.CharField(max_length=100)

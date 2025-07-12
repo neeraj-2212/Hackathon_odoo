@@ -13,10 +13,34 @@
             color: #333;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
         .page-title {
             text-align: center;
-            margin-bottom: 30px;
             color: #2c3e50;
+            flex-grow: 1;
+        }
+
+        .back-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background-color: #2980b9;
         }
 
         .item-row {
@@ -93,7 +117,11 @@
     </style>
 </head>
 <body>
-    <h1 class="page-title">All Items</h1>
+    <div class="header">
+        <a href="{% url 'landing' %}" class="back-btn">← Back to Home</a>
+        <h1 class="page-title">All Items</h1>
+        <div style="width: 120px;"></div> <!-- Spacer for balance -->
+    </div>
 
     {% for item in items %}
     <div class="item-row">

@@ -123,8 +123,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
+MEDIA_ROOT = BASE_DIR / 'media'  # Your user login URL
+LOGOUT_REDIRECT_URL = 'landing'
+LOGIN_URL = '/login/'
 STATIC_URL = 'static/'
 import os
 STATICFILES_DIRS = [

@@ -282,9 +282,45 @@
                 height: 300px;
             }
         }
+        .action-panel {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.points-display {
+    text-align: center;
+}
+
+.points-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.points-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.text-success {
+    color: #28a745;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
     </style>
 </head>
 <body>
+    {% if request.user.is_authenticated %}
+
     <div class="container">
         <div class="header">
             <a href="{% url 'item-list' %}" class="back-button">
@@ -346,14 +382,20 @@
                     <div class="description-content">{{ item.description }}</div>
                 </div>
                 
-                <div class="action-buttons">
-                    <button class="btn btn-primary" {% if not item.status %}disabled{% endif %}>
-                        {% if item.points %}Redeem Points{% else %}Request Swap{% endif %}
-                    </button>
-                    <button class="btn btn-secondary">
-                        Contact Owner
-                    </button>
-                </div>
+             <div class="action-panel">
+    <!-- Button with conditional disabled state and dynamic text -->
+    <button class="btn btn-primary" {% if not item.status %}disabled{% endif %}>
+        {% if total_points > 0 %}Redeem Points{% else %}Request Swap{% endif %}
+    </button>
+    
+    <!-- Points display panel -->
+    <div class="points-display mt-2">
+        <div class="points-label">Your Points Balance:</div>
+        <div class="points-value {% if total_points > 0 %}text-success{% else %}text-muted{% endif %}">
+            {{ total_points|default:0 }} pts
+        </div>
+    </div>
+</div>
             </div>
         </div>
         
@@ -370,7 +412,9 @@
             </div>
         </div>
     </div>
-
+{% else %}
+    <p><a href="/login/">Login</a> to see more details</p>
+{% endif %}
     <script>
         function changeMainImage(src, element) {
             // Update main image

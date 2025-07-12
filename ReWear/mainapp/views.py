@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -7,6 +7,7 @@ from .models import Item,ItemImage
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 from .models import UserProfile, Item
 from .forms import ProfileUpdateForm
@@ -77,6 +78,7 @@ def register_view(request):
 
     return render(request, 'register.html')
 
+
 def list_item_view(request):
     item_list = Item.objects.prefetch_related('images').all()
     paginator = Paginator(item_list, 12)  # Show 12 items per page
@@ -85,12 +87,20 @@ def list_item_view(request):
     return render(request, "list_item.html", {'items': items})
 
 from django.shortcuts import render, get_object_or_404
+def user_logout(request):
+    logout(request)
+    return redirect('landing')
 
+@login_required
 def item_detail_view(request, item_id):
     item = get_object_or_404(Item.objects.prefetch_related('images'), id=item_id)
+    user_items = Item.objects.filter(user=request.user)
+    total_points = user_items.aggregate(total=Sum('points'))['total'] or 0
     context = {
         'item': item,
-        'owner': item.user  # Assuming you want to show owner info
+        'owner': item.user ,
+        'total_points':total_points,
+        'user_is_owner': request.user.is_authenticated and request.user == item.user# Assuming you want to show owner info
     }
     return render(request, "Items_detail_page.html", context)
 
@@ -103,6 +113,8 @@ def user_profile(request):
     
     user_items = Item.objects.filter(user=request.user).order_by('-uploaded_at')
     
+    total_points = user_items.aggregate(total=Sum('points'))['total'] or 0
+    
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -114,6 +126,7 @@ def user_profile(request):
     context = {
         'profile': profile,
         'form': form,
+        'total_points':total_points,
         'user_items': user_items[:8],  # Show latest 8 items
         'total_items': user_items.count()
     }
